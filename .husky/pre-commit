@@ -1,0 +1,24 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged (ESLint + Prettier on changed files)
+npx lint-staged
+
+# Type checking
+echo "📘 Type checking backend..."
+cd backend && npm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ Backend type check failed"
+  exit 1
+fi
+
+echo "📘 Type checking frontend..."
+cd ../frontend && npm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ Frontend type check failed"
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

@@ -1,0 +1,28 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push checks (unit tests on modified files)..."
+
+# Run unit tests for changed files only
+CHANGED_BACKEND=$(git diff --cached --name-only --diff-filter=ACM | grep "^backend/src/" | head -1)
+CHANGED_FRONTEND=$(git diff --cached --name-only --diff-filter=ACM | grep "^frontend/src/" | head -1)
+
+if [ -n "$CHANGED_BACKEND" ]; then
+  echo "🧪 Running backend unit tests..."
+  cd backend && npm run test:unit
+  if [ $? -ne 0 ]; then
+    echo "❌ Backend tests failed — push aborted"
+    exit 1
+  fi
+fi
+
+if [ -n "$CHANGED_FRONTEND" ]; then
+  echo "🧪 Running frontend tests..."
+  cd frontend && npm test
+  if [ $? -ne 0 ]; then
+    echo "❌ Frontend tests failed — push aborted"
+    exit 1
+  fi
+fi
+
+echo "✅ Pre-push checks passed!"

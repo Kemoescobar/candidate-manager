@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env
+.env.local
+.env.*.local
+k6-report.json
+k6-summary.txt
+playwright-report/
+test-results/
+.DS_Store
+*.tsbuildinfo
