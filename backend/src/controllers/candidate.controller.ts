@@ -5,9 +5,9 @@ import {
   sendSuccess,
   sendCreated,
   sendNotFound,
-  sendServerError,
 } from '../utils/response';
 import { logger } from '../utils/logger';
+import { ICandidate } from '../models/candidate.model';
 
 export const createCandidate = async (
   req: AuthRequest,
@@ -15,7 +15,7 @@ export const createCandidate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const candidate = await candidateService.create(req.body);
+    const candidate = await candidateService.create(req.body as ICandidate);
     logger.info('Candidate created', { id: candidate.id, createdBy: req.user?.email });
     sendCreated(res, candidate, 'Candidat créé avec succès');
   } catch (error) {
@@ -46,7 +46,7 @@ export const updateCandidate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const candidate = await candidateService.update(req.params.id, req.body);
+    const candidate = await candidateService.update(req.params.id, req.body as Partial<ICandidate>);
     if (!candidate) {
       sendNotFound(res, 'Candidat introuvable');
       return;

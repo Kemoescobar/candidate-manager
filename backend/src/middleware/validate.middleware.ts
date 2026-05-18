@@ -5,7 +5,7 @@ import { sendError } from '../utils/response';
 export const validate =
   (schema: Joi.ObjectSchema, source: 'body' | 'query' | 'params' = 'body') =>
   (req: Request, res: Response, next: NextFunction): void => {
-    const { error, value } = schema.validate(req[source], {
+    const { error, value } = schema.validate(req[source as keyof Request], {
       abortEarly: false,
       stripUnknown: true,
     });
@@ -20,6 +20,6 @@ export const validate =
       return;
     }
 
-    req[source] = value;
+    req[source as keyof Request] = value;
     next();
   };

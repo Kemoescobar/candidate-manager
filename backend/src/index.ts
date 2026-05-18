@@ -34,4 +34,4 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-start();
+void start();
